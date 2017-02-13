@@ -15,4 +15,4 @@ WORKDIR /var/www/drupal
 
 # Config
 ADD apache.conf /etc/apache2/sites-enabled/000-default.conf
-ADD bash_profile /var/www/.bash_profile
+ADD bashrc.sh /var/www/.bashrc
