@@ -1,7 +1,7 @@
 FROM drupaldocker/php:7.1-apache
 
 # Install CLI dependencies
-RUN apt-get update && apt-get install -y mariadb-client curl \
+RUN apt-get update && apt-get install -y mariadb-client curl git \
 	&& apt-get clean
 
 # Install Composer
