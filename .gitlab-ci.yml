@@ -1,15 +1,25 @@
+stages:
+  - pre-build
+  - build
 
-image: docker:latest
-
-services:
-  - docker:dind
-
-before_script:
-  - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+list-tags:
+  stage: pre-build
+  image: everpeace/curl-jq
+  variables:
+    BASE_TAGS_API_URL: https://hub.docker.com/v2/repositories/library/php/tags/?page_size=9999
+    BASE_TAGS_FILTER: apache
+  script:
+    - curl --insecure --silent $BASE_TAGS_API_URL | jq '."results"[]["name"]' --raw-output | grep $BASE_TAGS_FILTER > tags_list.txt
+    - cat tags_list.txt
 
 build-master:
   stage: build
+  image: docker:latest
+  services:
+    - docker:dind
   script:
+    - cat tags_list.txt
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
     - docker build --pull -t "$CI_REGISTRY_IMAGE" .
     - docker push "$CI_REGISTRY_IMAGE"
   only:
