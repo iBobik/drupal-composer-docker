@@ -1,4 +1,5 @@
-FROM drupaldocker/php:7.1-apache
+ARG  BASE_IMAGE_TAG=7.1-apache
+FROM drupaldocker/php:${BASE_IMAGE_TAG}
 
 # Install CLI dependencies
 RUN apt-get update && apt-get install -y mariadb-client curl git \
