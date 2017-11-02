@@ -6,7 +6,7 @@ list-tags:
   stage: pre-build
   image: everpeace/curl-jq
   variables:
-    BASE_TAGS_API_URL: https://hub.docker.com/v2/repositories/library/php/tags/?page_size=9999
+    BASE_TAGS_API_URL: https://hub.docker.com/v2/repositories/drupaldocker/php/tags/?page_size=9999
     BASE_TAGS_FILTER: apache
   script:
     - curl --insecure --silent $BASE_TAGS_API_URL | jq '."results"[]["name"]' --raw-output | grep $BASE_TAGS_FILTER > tags_list.txt
