@@ -8,21 +8,23 @@ Docker image with out-of-box support for Composer workflow. Recommanded Composer
 - DocumentRoot is in /var/www/drupal/web, so Drupal is in subdirectory of project root (/var/www/drupal - where composer.json is located).
 
 ## Tags
-Tags will follow tags of [official php image](https://hub.docker.com/_/php/).
+Tags of this image follow `apache` tags of [drupaldocker/php image](https://hub.docker.com/r/drupaldocker/php/).
 
-Currently only `7.1-apache` is supported. Issues with ideas or PRs with some scalable solution to support all tags at once are welcome.
+It uses GitLab CI and it's registry, so **you have to prepend image by: `registry.gitlab.com`** You can use also [Docker Hub](https://hub.docker.com/r/bobik/drupal-composer), but there is only `7.1-apache` tag, because Docker Hub does not support scripting in build process.
+
+Available tags can be seen on [GitLab project page](https://gitlab.com/janpoboril/drupal-composer-docker/container_registry).
 
 ## How to use it
 
 Pull and run image by CLI:
 ```
-docker run -d -p 8080:80 --name my-drupal-app -v $(pwd)/drupal:/var/www/drupal bobik/drupal-composer:7.1-apache
+docker run -d -p 8080:80 --name my-drupal-app -v $(pwd)/drupal:/var/www/drupal registry.gitlab.com/janpoboril/drupal-composer-docker:7.1-apache
 ```
 or better use in `docker-compose.yml` like:
 ```
 services:
   web:
-    image: bobik/drupal-composer:7.1-apache
+    image: registry.gitlab.com/janpoboril/drupal-composer-docker:7.1-apache
     ports:
       - "8080:80"
     volumes:
@@ -30,7 +32,7 @@ services:
 ```
 or as a base for your own image in `Dockerfile` beginning with:
 ```
-FROM bobik/drupal-composer:7.1-apache
+FROM registry.gitlab.com/janpoboril/drupal-composer-docker:7.1-apache
 ```
 
 ### Initializing Drupal project

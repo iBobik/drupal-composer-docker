@@ -1,16 +1,59 @@
+stages:
+  - pre-build
+  - build
 
-image: docker:latest
-
-services:
-  - docker:dind
-
-before_script:
-  - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
-
-build-master:
-  stage: build
-  script:
-    - docker build --pull -t "$CI_REGISTRY_IMAGE" .
-    - docker push "$CI_REGISTRY_IMAGE"
+list-tags:
+  stage: pre-build
   only:
     - master
+  image: everpeace/curl-jq
+  variables:
+    BASE_TAGS_API_URL: https://hub.docker.com/v2/repositories/drupaldocker/php/tags/?page_size=9999
+    BASE_TAGS_FILTER: apache
+  script:
+    - curl --insecure --silent $BASE_TAGS_API_URL | jq '."results"[]["name"]' --raw-output | grep $BASE_TAGS_FILTER > tags_list.txt
+  artifacts:
+    untracked: true
+
+.paralel-build: &paralel-build
+  stage: build
+  image: docker:latest
+  services:
+    - docker:dind
+  only:
+    - master
+  variables:
+    JOBS_NUMBER: 10
+  script:
+      # Select tags to process
+    - export TAGS=$(awk "NR % $JOBS_NUMBER == ${CI_JOB_NAME#'build '}" tags_list.txt)
+      # Login to image registry
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+    - |
+      for TAG in ${TAGS//\\n/ }
+      do
+        docker build --pull -t "$CI_REGISTRY_IMAGE:$TAG" --build-arg "BASE_IMAGE_TAG=$TAG" .
+        docker push "$CI_REGISTRY_IMAGE:$TAG"
+      done
+
+# Fake "build matrix" feature
+build 0:
+  <<: *paralel-build
+build 1:
+  <<: *paralel-build
+build 2:
+  <<: *paralel-build
+build 3:
+  <<: *paralel-build
+build 4:
+  <<: *paralel-build
+build 5:
+  <<: *paralel-build
+build 6:
+  <<: *paralel-build
+build 7:
+  <<: *paralel-build
+build 8:
+  <<: *paralel-build
+build 9:
+  <<: *paralel-build
