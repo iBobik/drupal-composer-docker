@@ -5,7 +5,7 @@ Docker image with out-of-box support for Composer workflow. Recommanded Composer
 - [Composer](https://getcomposer.org) is pre-installed
 - CLI utilities installed by Composer (Drush, Drupal Console, ...) are in PATH, so you can call them from anywhere in the container
 - Drush [will know](https://github.com/iBobik/drupal-composer-docker/blob/master/drushrc.php#L4) where is Drupal root, so you do not have to be in the project directory
-- DocumentRoot is in /var/www/drupal/web, so Drupal is in subdirectory of project root (/var/www/drupal - where composer.json is located).
+- DocumentRoot is in /var/www/drupal/web, so Drupal is in subdirectory of project root (/var/www/drupal - where composer.json is located). Can be overriden by environment variable `DOCROOT`.
 
 ## Tags
 Tags of this image follow `apache` tags of [drupaldocker/php image](https://hub.docker.com/r/drupaldocker/php/).

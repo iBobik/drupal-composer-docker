@@ -15,6 +15,7 @@ RUN chown www-data:www-data /var/www
 WORKDIR /var/www/drupal
 
 # Config
+ENV DOCROOT=/var/www/drupal/web
 ADD apache.conf /etc/apache2/sites-enabled/000-default.conf
 ADD bashrc.sh /var/www/.bashrc
 ADD drushrc.php /etc/drush/drushrc.php
