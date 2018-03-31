@@ -1,4 +1,4 @@
-ARG  BASE_IMAGE_TAG=7.1-apache
+ARG  BASE_IMAGE_TAG=7.2-apache
 FROM drupaldocker/php:${BASE_IMAGE_TAG}
 
 # Install CLI dependencies
