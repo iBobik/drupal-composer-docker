@@ -11,7 +11,7 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin -
 
 # Create directories for Drupal
 RUN mkdir -p /tmp/drupal && chown www-data:www-data /tmp/drupal
-RUN chown www-data:www-data /var/www
+RUN chown -R www-data:www-data /var/www
 WORKDIR /var/www/drupal
 
 # Config
